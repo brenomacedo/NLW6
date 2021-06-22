@@ -5,17 +5,19 @@ import '../styles/auth.scss'
 import { Button } from '../components/Button'
 import { useHistory } from 'react-router-dom'
 import { firebase, auth } from '../services/firebase'
+import { useAuth } from '../providers/AuthProvider'
 
 export const Home = () => {
 
     const history = useHistory()
+    const { signInWithGoogle, user } = useAuth()
 
-    const handleCreateRoom = () => {
+    const handleCreateRoom = async () => {
 
-        const provider = new firebase.auth.GoogleAuthProvider() 
-        auth.signInWithPopup(provider).then(result => {
-            
-        })
+        if(!user) {
+            await signInWithGoogle()
+        }
+        
         history.push('/rooms/new')
     }
 
