@@ -60,7 +60,7 @@
                 align-items: center;
                 margin-top: 16px;
 
-                span {
+                > span {
                     font-size: 14px;
                     color: #737380;
                     font-weight: 500;
@@ -72,6 +72,25 @@
                         text-decoration: underline;
                         font-weight: 500;
                         cursor: pointer;
+                    }
+                }
+
+                .user-info {
+                    display: flex;
+                    align-items: center;
+
+                    img {
+                        width: 32px;
+                        height: 32px;
+                        border-radius: 16px;
+                        border: 1px solid #ccc;
+                    }
+
+                    span {
+                        margin-left: 8px;
+                        color: #29292e;
+                        font-weight: 500;
+                        font-size: 14px;
                     }
                 }
             }
