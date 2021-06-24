@@ -1,3 +1,4 @@
+import { ReactNode } from 'react'
 import '../styles/question.scss'
 
 interface QuestionProps {
@@ -5,10 +6,11 @@ interface QuestionProps {
     author: {
         name: string
         avatar: string
-    }
+    },
+    children?: ReactNode
 }
 
-export const Question = ({ content, author: { avatar, name }}: QuestionProps) => {
+export const Question = ({ children, content, author: { avatar, name }}: QuestionProps) => {
     return (
         <div className="question">
             <p>
@@ -19,7 +21,9 @@ export const Question = ({ content, author: { avatar, name }}: QuestionProps) =>
                     <img src={avatar} alt={name} />
                     <span>{name}</span>
                 </div>
-                <div></div>
+                <div>
+                    {children}
+                </div>
             </footer>
         </div>
     )
