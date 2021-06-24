@@ -1,68 +1,25 @@
-import { useEffect } from 'react'
 import { FormEvent, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import LogoImage from '../assets/images/logo.svg'
 import { Button } from '../components/Button'
 import { Code } from '../components/Code'
-import { useAuth } from '../providers/AuthProvider'
+import { useAuth } from '../hooks/useAuth'
 import { database } from '../services/firebase'
 import { Question } from '../components/Question'
 import '../styles/room.scss'
+import { useRoom } from '../hooks/useRoom'
 
 interface RoomParams {
     id: string
 }
 
-interface QuestionProps {
-    id: string
-    author: {
-        name: string
-        avatar: string
-    }
-    content: string
-    isAnswered: boolean
-    isHighlighted: boolean
-}
-
-type FirebaseQuestions = Record<string, {
-    author: {
-        name: string
-        avatar: string
-    }
-    content: string
-    isAnswered: boolean
-    isHighlighted: boolean
-}>
-
 export const Room = () => {
 
     const { user } = useAuth()
-
     const [newQuestion, setNewQuestion] = useState('')
-    const [questions, setQuestions] = useState<QuestionProps[]>([])
-    const [title, setTitle] = useState('')
-
     const { id: roomId } = useParams<RoomParams>()
 
-    useEffect(() => {
-        const roomRef = database.ref(`rooms/${roomId}`)
-
-        roomRef.on('value', room => {
-            const databaseRoom = room.val()
-            const firebaseQuestions: FirebaseQuestions = databaseRoom.questions ?? {}
-
-            const parsedQuestions = Object.entries(firebaseQuestions).map(([key, value]) => ({
-                id: key,
-                content: value.content,
-                author: value.author,
-                isHighlighted: value.isHighlighted,
-                isAnswered: value.isAnswered
-            }))
-
-            setTitle(databaseRoom.title)
-            setQuestions(parsedQuestions)
-        })
-    }, [roomId])
+    const { questions, title } = useRoom(roomId)
 
     const handleSendQuestion = async (e: FormEvent) => {
 

@@ -1,4 +1,3 @@
-import { useContext } from "react"
 import { useState } from "react"
 import { useEffect } from "react"
 import { FC } from "react"
@@ -73,4 +72,4 @@ export const AuthProvider:FC = ({ children }) => {
     )
 }
 
-export const useAuth = () => useContext(AuthContext)
+export { AuthContext }
