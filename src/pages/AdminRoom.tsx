@@ -1,6 +1,6 @@
 import LogoImage from '../assets/images/logo.svg'
 import DeleteImage from '../assets/images/delete.svg'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { Button } from '../components/Button'
 import { Code } from '../components/Code'
 import { Question } from '../components/Question'
@@ -17,6 +17,16 @@ export const AdminRoom = () => {
     const { id: roomId } = useParams<RoomParams>()
 
     const { questions, title } = useRoom(roomId)
+
+    const history = useHistory()
+
+    const handleEndRoom = async () => {
+        await database.ref(`rooms/${roomId}`).update({
+            endedAt: new Date()
+        })
+
+        history.push('/')
+    }
 
     const handleDeleteQuestion = async (questionId: string) => {
         if(window.confirm('Deseja realmente remover essa pergunta?')) {
@@ -46,7 +56,7 @@ export const AdminRoom = () => {
                     <img src={LogoImage} alt="logo" />
                     <div>
                         <Code code={roomId} />
-                        <Button isOutlined>Encerrar sala</Button>
+                        <Button onClick={handleEndRoom} isOutlined>Encerrar sala</Button>
                     </div>
                 </div>
             </header>
