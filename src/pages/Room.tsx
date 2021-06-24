@@ -6,13 +6,14 @@ import { Button } from '../components/Button'
 import { Code } from '../components/Code'
 import { useAuth } from '../providers/AuthProvider'
 import { database } from '../services/firebase'
+import { Question } from '../components/Question'
 import '../styles/room.scss'
 
 interface RoomParams {
     id: string
 }
 
-interface Question {
+interface QuestionProps {
     id: string
     author: {
         name: string
@@ -38,7 +39,7 @@ export const Room = () => {
     const { user } = useAuth()
 
     const [newQuestion, setNewQuestion] = useState('')
-    const [questions, setQuestions] = useState<Question[]>([])
+    const [questions, setQuestions] = useState<QuestionProps[]>([])
     const [title, setTitle] = useState('')
 
     const { id: roomId } = useParams<RoomParams>()
@@ -46,7 +47,7 @@ export const Room = () => {
     useEffect(() => {
         const roomRef = database.ref(`rooms/${roomId}`)
 
-        roomRef.once('value', room => {
+        roomRef.on('value', room => {
             const databaseRoom = room.val()
             const firebaseQuestions: FirebaseQuestions = databaseRoom.questions ?? {}
 
@@ -90,6 +91,16 @@ export const Room = () => {
         setNewQuestion('')
     }
 
+    const renderQuestions = () => {
+        return questions.map(({ author, content, id }) => (
+            <Question
+                key={id}
+                author={author}
+                content={content}
+            />
+        ))
+    }
+
     return (
         <div id="page-room">
             <header>
@@ -120,6 +131,10 @@ export const Room = () => {
                         <Button type="submit" disabled={!user}>Enviar pergunta</Button>
                     </div>
                 </form>
+
+                <div className="question-list">
+                    {renderQuestions()}
+                </div>
             </main>
         </div>
     )
